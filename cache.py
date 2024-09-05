@@ -31,13 +31,16 @@ class Cache:
         self.associativity = associativity
         self.num_blocks = self.cache_size // self.block_size
         self.num_sets = self.num_blocks // self.associativity
-        self.index_length = int(math.log(self.num_sets)) 
-        self.tag_length = 32 - self.index_length
+        self.index_length = int(math.log(self.num_sets))
+        self.byte_offset_length=int(math.log(self.block_size)) 
+        self.tag_length = 32 - self.index_length-self.byte_offset_length
         self.cache_sets = [CacheSet(associativity) for _ in range(self.num_sets)]
 
     def get_set_index(self, address):
         left = self.tag_length + 1  
-        return address[left:]  
+        print(address)
+        print(address[left:left+self.index_length])
+        return address[left:left+self.index_length]  
 
     def get_tag(self, address):
         left = self.tag_length + 1
@@ -84,7 +87,7 @@ def plot_miss_rate_vs_cache_size(trace_file):
     plt.plot(cache_sizes_kb, miss_rates, marker='o', label=f'{trace_file}')
 
 def plot_miss_rate_vs_block_size(trace_file):
-    block_sizes = [1, 2, 4, 8, 16, 32, 64, 128]  # Different block sizes
+    block_sizes = [4, 8, 16, 32, 64, 128]  # Different block sizes
     miss_rates = []
 
     for block_size in block_sizes:

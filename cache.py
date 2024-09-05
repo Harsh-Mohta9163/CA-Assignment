@@ -115,32 +115,26 @@ def main():
     # Plot Miss Rate vs Cache Size
     for trace_file in trace_files:
         plot_miss_rate_vs_cache_size(trace_file)
-    plt.title('Miss Rate vs Cache Size')
-    plt.xlabel('Cache Size (KB)')
-    plt.ylabel('Miss Rate (%)')
-    plt.legend()
-    plt.grid(True)
-    plt.show()
-
-    # Plot Miss Rate vs Block Size
-    for trace_file in trace_files:
+        plt.title('Miss Rate vs Cache Size')
+        plt.xlabel('Cache Size (KB)')
+        plt.ylabel('Miss Rate (%)')
+        plt.legend()
+        plt.grid(True)
+        plt.show()
         plot_miss_rate_vs_block_size(trace_file)
-    plt.title('Miss Rate vs Block Size')
-    plt.xlabel('Block Size (Bytes)')
-    plt.ylabel('Miss Rate (%)')
-    plt.legend()
-    plt.grid(True)
-    plt.show()
-
-    # Plot Hit Rate vs Associativity
-    for trace_file in trace_files:
+        plt.title('Miss Rate vs Block Size')
+        plt.xlabel('Block Size (Bytes)')
+        plt.ylabel('Miss Rate (%)')
+        plt.legend()
+        plt.grid(True)
+        plt.show()
         plot_hit_rate_vs_associativity(trace_file)
-    plt.title('Hit Rate vs Associativity')
-    plt.xlabel('Associativity')
-    plt.ylabel('Hit Rate (%)')
-    plt.legend()
-    plt.grid(True)
-    plt.show()
-
+        plt.title('Hit Rate vs Associativity')
+        plt.xlabel('Associativity')
+        plt.ylabel('Hit Rate (%)')
+        plt.legend()
+        plt.grid(True)
+        plt.show()
+        
 if __name__ == "__main__":
     main()

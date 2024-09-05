@@ -1,4 +1,4 @@
-import math #hello
+import math
 import matplotlib.pyplot as plt
 
 class CacheLine:

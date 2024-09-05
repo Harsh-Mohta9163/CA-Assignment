@@ -32,17 +32,18 @@ class Cache:
         self.num_blocks = self.cache_size // self.block_size
         self.num_sets = self.num_blocks // self.associativity
         self.index_length = int(math.log(self.num_sets, 2))
-        self.byte_offset_length=int(math.log(self.block_size, 2)) 
-        self.tag_length = 32 - self.index_length-self.byte_offset_length
+        self.byte_offset_length = int(math.log(self.block_size, 2))
+        self.tag_length = 32 - self.index_length - self.byte_offset_length
         self.cache_sets = [CacheSet(associativity) for _ in range(self.num_sets)]
 
     def get_set_index(self, address):
-        left = self.tag_length + 1
-        return address[left:left+self.index_length]  
+        # Extract the set index from the binary address
+        left = self.tag_length
+        return address[left:left+self.index_length]
 
     def get_tag(self, address):
-        left = self.tag_length + 1
-        return address[:left]
+        # Extract the tag from the binary address
+        return address[:self.tag_length]
 
     def access(self, address):
         set_index = self.get_set_index(address)
@@ -64,7 +65,7 @@ def simulate_cache(trace_file, cache_size_kb, block_size, associativity):
         for line in f:
             parts = line.split()
             address = int(parts[1], 16)  # Memory address in hex
-            address = bin(address)[2:].zfill(32)
+            address = bin(address)[2:].zfill(32)  # Convert address to binary string
             if cache.access(address):
                 hits += 1
             else:
@@ -79,19 +80,19 @@ def plot_miss_rate_vs_cache_size(trace_file):
     for cache_size in cache_sizes_kb:
         hits, misses = simulate_cache(trace_file, cache_size, block_size=4, associativity=4)
         total_accesses = hits + misses
-        miss_rate = misses / total_accesses * 100
+        miss_rate = (misses / total_accesses) * 100
         miss_rates.append(miss_rate)
 
     plt.plot(cache_sizes_kb, miss_rates, marker='o', label=f'{trace_file}')
 
 def plot_miss_rate_vs_block_size(trace_file):
-    block_sizes = [1,2,4, 8, 16, 32, 64, 128]  # Different block sizes
+    block_sizes = [1, 2, 4, 8, 16, 32, 64, 128]  # Different block sizes
     miss_rates = []
 
     for block_size in block_sizes:
         hits, misses = simulate_cache(trace_file, cache_size_kb=1024, block_size=block_size, associativity=4)
         total_accesses = hits + misses
-        miss_rate = misses / total_accesses * 100
+        miss_rate = (misses / total_accesses) * 100
         miss_rates.append(miss_rate)
 
     plt.plot(block_sizes, miss_rates, marker='o', label=f'{trace_file}')
@@ -103,7 +104,7 @@ def plot_hit_rate_vs_associativity(trace_file):
     for associativity in associativities:
         hits, misses = simulate_cache(trace_file, cache_size_kb=1024, block_size=4, associativity=associativity)
         total_accesses = hits + misses
-        hit_rate = hits / total_accesses * 100
+        hit_rate = (hits / total_accesses) * 100
         hit_rates.append(hit_rate)
 
     plt.plot(associativities, hit_rates, marker='o', label=f'{trace_file}')

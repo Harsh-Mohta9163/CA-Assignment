@@ -87,7 +87,7 @@ def plot_miss_rate_vs_cache_size(trace_file):
     plt.plot(cache_sizes_kb, miss_rates, marker='o', label=f'{trace_file}')
 
 def plot_miss_rate_vs_block_size(trace_file):
-    block_sizes = [4, 8, 16, 32, 64, 128]  # Different block sizes
+    block_sizes = [1,2,4, 8, 16, 32, 64, 128]  # Different block sizes
     miss_rates = []
 
     for block_size in block_sizes:

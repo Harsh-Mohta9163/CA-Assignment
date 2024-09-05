@@ -31,18 +31,22 @@ class Cache:
         self.associativity = associativity
         self.num_blocks = self.cache_size // self.block_size
         self.num_sets = self.num_blocks // self.associativity
+        self.index_length = int(math.log(self.num_sets)) 
+        self.tag_length = 32 - self.index_length
         self.cache_sets = [CacheSet(associativity) for _ in range(self.num_sets)]
 
     def get_set_index(self, address):
-        return (address // self.block_size) % self.num_sets
+        left = self.tag_length + 1  
+        return address[left:]  
 
     def get_tag(self, address):
-        return address // (self.block_size * self.num_sets)
+        left = self.tag_length + 1
+        return address[:left]
 
     def access(self, address):
         set_index = self.get_set_index(address)
-        tag = self.get_tag(address)
-        cache_set = self.cache_sets[set_index]
+        tag = int(self.get_tag(address), 2)
+        cache_set = self.cache_sets[int(set_index, 2)]
 
         if cache_set.access(tag):  # Cache hit
             return True
@@ -59,7 +63,7 @@ def simulate_cache(trace_file, cache_size_kb, block_size, associativity):
         for line in f:
             parts = line.split()
             address = int(parts[1], 16)  # Memory address in hex
-
+            address = bin(address)[2:].zfill(32)
             if cache.access(address):
                 hits += 1
             else:
